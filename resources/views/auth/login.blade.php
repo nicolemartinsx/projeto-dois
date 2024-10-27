@@ -44,4 +44,15 @@
             </x-primary-button>
         </div>
     </form>
+
+    <!-- Botão de Login com Google -->
+    <div class="flex justify-center mt-6">
+        <x-primary-button class="ms-3" onclick="window.location='{{ url('login/google') }}'">
+            <span class="mr-2">
+                <img src="https://accounts.scdn.co/sso/images/new-google-icon.72fd940a229bc94cf9484a3320b3dccb.svg" class="w-5 h-5" alt="Google logo">
+            </span>
+            {{ __('Continuar com o Google') }}
+        </x-primary-button>
+
+    </div>
 </x-guest-layout>
