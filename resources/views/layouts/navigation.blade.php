@@ -34,9 +34,11 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        @if (!Auth::user()->google_id)
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Perfil') }}
                         </x-dropdown-link>
+                        @endif
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -80,9 +82,11 @@
             </div>
 
             <div class="mt-3 space-y-1">
+                @if (!Auth::user()->google_id)
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Perfil') }}
                 </x-responsive-nav-link>
+                @endif
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
