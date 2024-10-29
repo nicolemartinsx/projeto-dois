@@ -10,8 +10,12 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
 
 Route::middleware('guest')->group(function () {
+    Route::get('login/google', [LoginController::class, 'redirectToProvider']);
+    Route::get('login/google/callback', [LoginController::class, 'handleProviderCallback']);
+
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 

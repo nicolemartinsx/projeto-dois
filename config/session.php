@@ -27,7 +27,7 @@ return [
 
     'http_only' => true,
 
-    'same_site' => "strict",
+    'same_site' => "lax",
 
     'partitioned' => false,
 

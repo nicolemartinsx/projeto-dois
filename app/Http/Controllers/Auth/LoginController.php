@@ -17,7 +17,7 @@ class LoginController extends Controller
      */
     public function redirectToProvider()
     {
-        return Socialite::driver('google')->stateless()->redirect();
+        return Socialite::driver('google')->redirect();
     }
 
     /**
@@ -28,7 +28,7 @@ class LoginController extends Controller
     public function handleProviderCallback(Request $request)
     {
         try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+            $googleUser = Socialite::driver('google')->user();
         } catch (\Exception $e) {
             return redirect()->route('login')->with('error', 'Unable to login with Google. Please try again.');
         }
@@ -49,6 +49,6 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended('dashboard');
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 }

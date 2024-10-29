@@ -2,12 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\LoginController;
 
 Route::middleware(['web'])->group(function () {
-    Route::get('login/google', [LoginController::class, 'redirectToProvider']);
-    Route::get('login/google/callback', [LoginController::class, 'handleProviderCallback']);
-
     Route::get('/', function () {
         return redirect('/login');
     });
