@@ -22,17 +22,21 @@ Route::middleware(['web'])->group(function () {
         Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');
     });
 
+    
+
     Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+     
+     
+        Route::get('/pdfs', [PdfController::class, 'index'])->name('pdfs.index');
 
-        Route::get('/dashboard', [PdfController::class, 'index'])->name('dashboard');
         Route::post('/pdf/upload', [PdfController::class, 'uploadPDF'])->name('pdf.upload');
-        Route::get('/pdfs/{filename}', [PdfController::class, 'show'])->name(name: 'pdfs.show');
-        Route::get('/pdfs/download/{filename}', [PdfController::class, 'download'])->name('pdfs.download');
-        Route::delete('/pdfs/{filename}', [PdfController::class, 'deletar'])->name('pdfs.deletar');
+        Route::get('/pdfs/{id}', [PdfController::class, 'show'])->name('pdfs.show');
+        Route::get('/pdfs/download/{id}', [PdfController::class, 'download'])->name('pdfs.download');
+        Route::delete('/pdfs/{id}', [PdfController::class, 'deletar'])->name('pdfs.deletar');
     });
 });
 

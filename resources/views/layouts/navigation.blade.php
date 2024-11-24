@@ -16,13 +16,35 @@
                         {{ __('Painel') }}
                     </x-nav-link>
                 </div>
+
+                
                 @if (Auth::user()->role == 'admin')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('users')" :active="request()->routeIs('users')">
                         {{ __('Servidores') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('pdfs.index')" :active="request()->routeIs('pdfs.index')">
+                        {{ __('Meus PDFs') }}
+                    </x-nav-link>
                 </div>
                 @endif
+
+                @if (Auth::user()->role == 'user')
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('pdfs.index')" :active="request()->routeIs('pdfs.index')">
+                        {{ __('Meus PDFs') }}
+                    </x-nav-link>
+                </div>
+                
+                @elseif (Auth::check() && Auth::user()->google_id !== null)
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+               
+                </div>
+                @endif
+
+           
+
+                
             </div>
 
             <!-- Settings Dropdown -->

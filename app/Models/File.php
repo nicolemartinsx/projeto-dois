@@ -17,7 +17,7 @@ class File extends Model
     protected $fillable = [
         'file_path',
         'user_id',
-       // 'original_name',
+        'original_name',
     ];
 
     // Defina a relação com o modelo User
