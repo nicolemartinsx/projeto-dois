@@ -26,7 +26,7 @@ class PdfController extends Controller
     }
     
     $userId = Auth::user()->id;
-    $pdfs = File::where('user_id', Auth::user()->id)->get();
+    $pdfs =  File::all();
 
     return view('pdf.pei', compact('pdfs'));
 }
@@ -43,7 +43,8 @@ class PdfController extends Controller
         $pdf = new File();
         $pdf->file_path = $path; 
         $pdf->user_id = $userId; 
-        $pdf->original_name = $request->file('pdf')->getClientOriginalName(); 
+        $pdf->original_name = $request->file('pdf')->getClientOriginalName();
+        $pdf->nome_aluno = $request->input('nome_aluno'); 
         $pdf->save();
 
 

@@ -15,6 +15,7 @@ class File extends Model
 
     // Defina os atributos que podem ser preenchidos em massa
     protected $fillable = [
+        'nome_aluno',
         'file_path',
         'user_id',
         'original_name',
