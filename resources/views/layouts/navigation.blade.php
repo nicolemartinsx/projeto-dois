@@ -29,7 +29,7 @@
                         {{ __('Servidores') }}
                     </x-nav-link>
                     <x-nav-link :href="route('pdfs.index')" :active="request()->routeIs('pdfs.index')">
-                        {{ __('Meus PDFs') }}
+                        {{ __('PEIs') }}
                     </x-nav-link>
                 </div>
                 @endif
@@ -37,7 +37,7 @@
                 @if (Auth::user()->role == 'user')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('pdfs.index')" :active="request()->routeIs('pdfs.index')">
-                        {{ __('Meus PDFs') }}
+                        {{ __('PEIs') }}
                     </x-nav-link>
                 </div>
 
