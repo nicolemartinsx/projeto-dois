@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PdfController;
+use App\Http\Controllers\ProfessorController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -22,21 +23,20 @@ Route::middleware(['web'])->group(function () {
         Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');
     });
 
-    
+
 
     Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-     
-     
         Route::get('/pdfs', [PdfController::class, 'index'])->name('pdfs.index');
-
         Route::post('/pdf/upload', [PdfController::class, 'uploadPDF'])->name('pdf.upload');
         Route::get('/pdfs/{id}', [PdfController::class, 'show'])->name('pdfs.show');
         Route::get('/pdfs/download/{id}', [PdfController::class, 'download'])->name('pdfs.download');
         Route::delete('/pdfs/{id}', [PdfController::class, 'deletar'])->name('pdfs.deletar');
+
+        Route::get('/professors', [ProfessorController::class, 'index'])->name('professors');
     });
 });
 

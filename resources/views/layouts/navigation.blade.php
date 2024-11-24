@@ -15,9 +15,14 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Painel') }}
                     </x-nav-link>
+                    @if (!Auth::user()->google_id)
+                    <x-nav-link :href="route('professors')" :active="request()->routeIs('professors')">
+                        {{ __('Professores') }}
+                    </x-nav-link>
+                    @endif
                 </div>
 
-                
+
                 @if (Auth::user()->role == 'admin')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('users')" :active="request()->routeIs('users')">
@@ -35,16 +40,16 @@
                         {{ __('Meus PDFs') }}
                     </x-nav-link>
                 </div>
-                
+
                 @elseif (Auth::check() && Auth::user()->google_id !== null)
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-               
+
                 </div>
                 @endif
 
-           
 
-                
+
+
             </div>
 
             <!-- Settings Dropdown -->
