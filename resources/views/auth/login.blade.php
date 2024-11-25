@@ -1,6 +1,16 @@
 <x-guest-layout>
+    <!-- Add bootstrap temporarily -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
+
+    <!-- Validation Errors -->
+    @if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+    @endif
 
     <div x-data="{ activeTab: 0 }">
         <div class="flex p-4 justify-between">

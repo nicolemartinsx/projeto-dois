@@ -33,6 +33,9 @@ class LoginController extends Controller
             return redirect()->route('login')->with('error', 'Unable to login with Google. Please try again.');
         }
 
+        if (!str_contains($googleUser->getEmail(), '@alunos.utfpr.edu.br') && !str_contains($googleUser->getEmail(), '@utfpr.edu.br')) {
+            return redirect()->route('login')->with('error', 'Acesso negado. Utilize um e-mail UTFPR.');
+        }
         $authUser = User::where('google_id', $googleUser->getId())->first();
 
         if (!$authUser) {
