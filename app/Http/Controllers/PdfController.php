@@ -15,21 +15,26 @@ use Illuminate\Support\Facades\Auth;
 class PdfController extends Controller
 {
 
+    //tabela com todos os peis adicionados
+    public function tabela()
+    {
+        $pdfs = File::all(); 
+        return view('pdf.tabela', compact('pdfs')); 
+    }
+
+
     public function index()
-{
-
- 
-
+    {
 
     if (!Auth::check()) {
         return redirect()->route('login'); // Redireciona para a página de login se não estiver autenticado
     }
     
     $userId = Auth::user()->id;
-    $pdfs =  File::all();
+    $pdfs = File::where('user_id', $userId)->get();
 
     return view('pdf.pei', compact('pdfs'));
-}
+    }
 
     public function uploadPDF(Request $request)
     {
