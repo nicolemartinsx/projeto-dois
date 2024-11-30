@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Professor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
@@ -40,11 +41,20 @@ class LoginController extends Controller
 
         if (!$authUser) {
             $authUser = User::create([
-                'name' => $googleUser->getName(),
+                'name' => ucwords(strtolower($googleUser->getName())),
                 'email' => $googleUser->getEmail(),
                 'google_id' => $googleUser->getId(),
                 'password' => bcrypt($googleUser->getId()),
                 'email_verified_at' => now(),
+            ]);
+        }
+
+        $professor = Professor::where('email', $googleUser->getEmail())->first();
+
+        if (!$professor) {
+            Professor::create([
+                'name' => ucwords(strtolower($googleUser->getName())),
+                'email' => $googleUser->getEmail(),
             ]);
         }
 
