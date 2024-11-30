@@ -5,12 +5,16 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Middleware\RoleMiddleware;
+use App\Mail\EnvioPeiEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web'])->group(function () {
     Route::get('/', function () {
         return redirect('/login');
     });
+
+    Route::post('/enviar-email', [PdfController::class, 'enviarEmail'])->name('enviar-selecionados');
 
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -42,6 +46,8 @@ Route::middleware(['web'])->group(function () {
         Route::get('/pdfs/{id}', [PdfController::class, 'show'])->name('pdfs.show');
         Route::get('/pdfs/download/{id}', [PdfController::class, 'download'])->name('pdfs.download');
         Route::delete('/pdfs/{id}', [PdfController::class, 'deletar'])->name('pdfs.deletar');
+
+        Route::get('/pdfs/{id}/selecao', [PdfController::class, 'compartilhar'])->name('pdfs.selecao');
 
         Route::get('/professors', [ProfessorController::class, 'index'])->name('professors');
     });

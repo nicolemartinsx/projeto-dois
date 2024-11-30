@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Professor;
 use Illuminate\Support\Facades\Storage;
+use App\Mail\EnvioPeiEmail;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\File;
@@ -22,7 +25,34 @@ class PdfController extends Controller
         return view('pdf.tabela', compact('pdfs')); 
     }
 
+    public function compartilhar($id)
+    {
+        $pdf = File::findOrFail($id);
+        $professors = Professor::orderBy('name')->get();
+        return view('pdf.selecao', compact('pdf', 'professors'));
+    }
 
+    public function enviarEmail(Request $request)
+    {
+        $professoresSelecionados = $request->input('professores');
+        $pdfId = $request->input('pdf_id');
+
+        //caso não tenha selecionado nenhum professor
+        if (empty($professoresSelecionados)) {
+            return redirect()->back()->with('error', 'Selecione pelo menos um professor.');
+        }
+
+        $professores = Professor::whereIn('id', $professoresSelecionados)->get();
+        $emails = $professores->pluck('email')->toArray();
+        $pdf = File::findOrFail($pdfId);
+
+        foreach ($professores as $professor) {
+            $dados = ['nome' => $professor->name, 'pdf' => $pdf];
+            Mail::to($professor->email)->send(new EnvioPeiEmail($dados));
+        }
+
+        return redirect()->route('pdfs.tabela')->with('success', 'Email enviado com sucesso!');
+    }
     public function index()
     {
 
