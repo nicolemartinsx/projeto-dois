@@ -16,8 +16,13 @@ class UserController extends Controller
     public function index()
     {
         return view('users.index', [
-            'users' => User::query()->where('role', '!=', 'admin')->get()
+            'users' => User::query()
+                ->where('role', '!=', 'admin')
+                ->whereNull('google_id')
+                ->orderBy('name', 'asc')
+                ->get()
         ]);
+
     }
 
     /**
