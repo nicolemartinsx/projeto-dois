@@ -12,7 +12,7 @@ class ProfessorController extends Controller
     public function index()
     {
         return view('professors.index', [
-            'professors' => Professor::all()
+            'professors' => Professor::orderBy('name', 'asc')->get()
         ]);
     }
 }
