@@ -41,22 +41,16 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
 
                 </div>
-                @elseif  (Auth::user()->role == 'user')
+                @elseif (Auth::user()->role == 'user')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('pdfs.index')" :active="request()->routeIs('pdfs.index')">
+                        {{ __('Adicionar PEI') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('pdfs.tabela')" :active="request()->routeIs('pdfs.tabela')">
                         {{ __('PEIs') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('pdfs.tabela')" :active="request()->routeIs('pdfs.index')">
-                        {{ __('Tabela PEIs') }}
-                    </x-nav-link>
                 </div>
-
-                
                 @endif
-
-
-
-
             </div>
 
             <!-- Settings Dropdown -->

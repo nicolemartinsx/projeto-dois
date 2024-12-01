@@ -43,8 +43,7 @@ class EnvioPeiEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-
-            view: 'emails.exemplo',
+            view: 'emails.email',
         );
     }
 
