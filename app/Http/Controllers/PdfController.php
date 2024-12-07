@@ -82,6 +82,9 @@ class PdfController extends Controller
     public function show($id)
         {
     $file = File::findOrFail($id); 
+        $file->visualizado = true;
+        $file->save();
+
     $filePath = $file->file_path; 
 
     if (Storage::exists($filePath)) {

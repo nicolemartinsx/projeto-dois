@@ -26,13 +26,20 @@
                     <tbody>
                         @foreach ($pdfs as $pdf)
                         <tr class="odd:bg-blue-50">
-                            <td class="p-4"><a href="{{ route('pdfs.show', $pdf->id) }}" target="_blank" class="text-blue-600 hover:underline text-center">{{ $pdf->original_name }}</a></td>
+                            <td class="p-4">{{ $pdf->original_name }}</td>
                             <td class="p-4 text-center"> {{ $pdf->nome_aluno }}</td>
                             <td class="p-4 text-center">
+                                @if (Auth::user()->google_id == null)
                                 <form action="{{ route('pdfs.selecao', $pdf->id) }}" method="GET">
                                     @csrf
                                     <x-secondary-button type="submit">{{ __('Compartilhar') }}</x-secondary-button>
                                 </form>
+                                @else
+                                <form action="{{ route('pdfs.show', $pdf->id) }}" method="GET">
+                                    @csrf
+                                    <x-secondary-button type="submit">{{ __('Visualizar') }}</x-secondary-button>
+                                </form>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

@@ -19,6 +19,8 @@ class File extends Model
         'file_path',
         'user_id',
         'original_name',
+        'visualizado',
+        'confirmado'
     ];
 
     // Defina a relação com o modelo User
