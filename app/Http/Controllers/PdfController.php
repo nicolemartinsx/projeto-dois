@@ -9,11 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\File;
-use Illuminate\Support\Facades\DB;
-
 use Illuminate\Support\Facades\Auth;
-
-
 
 class PdfController extends Controller
 {
@@ -37,7 +33,6 @@ class PdfController extends Controller
         $professoresSelecionados = $request->input('professores');
         $pdfId = $request->input('pdf_id');
 
-        //caso não tenha selecionado nenhum professor
         if (empty($professoresSelecionados)) {
             return redirect()->back()->with('error', 'Selecione pelo menos um professor.');
         }
@@ -53,9 +48,9 @@ class PdfController extends Controller
 
         return redirect()->route('pdfs.tabela')->with('success', 'Email enviado com sucesso!');
     }
+
     public function index()
     {
-
     if (!Auth::check()) {
         return redirect()->route('login'); // Redireciona para a página de login se não estiver autenticado
     }
@@ -71,9 +66,8 @@ class PdfController extends Controller
         $request->validate([
             'pdf' => 'required|file|mimes:pdf|max:2048', //PDF de no máximo 2MB
         ]);
-        $userId = Auth::user() ->id;
+        $userId = Auth::user()->id;
         $path = $request->file('pdf')->store("pdfs/{$userId}");
-
 
         $pdf = new File();
         $pdf->file_path = $path; 
@@ -82,10 +76,8 @@ class PdfController extends Controller
         $pdf->nome_aluno = $request->input('nome_aluno'); 
         $pdf->save();
 
-
         return redirect()->back()->with('success', 'PDF enviado com sucesso!');
     }
-
 
     public function show($id)
         {
@@ -100,20 +92,16 @@ class PdfController extends Controller
     }
 
     public function download($id)
-    {
         {
             $file = File::findOrFail($id); 
             $filePath = $file->file_path; 
-    
          
             if (Storage::exists($filePath)) {
                 return Storage::download($filePath); 
             } else {
                 return response()->json(['message' => 'Arquivo não encontrado'], 404);
-            }
     }
     }
-    
 
     public function deletar($id)
     {

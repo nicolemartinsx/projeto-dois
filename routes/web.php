@@ -5,8 +5,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Middleware\RoleMiddleware;
-use App\Mail\EnvioPeiEmail;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web'])->group(function () {
@@ -16,18 +14,12 @@ Route::middleware(['web'])->group(function () {
 
     Route::post('/enviar-email', [PdfController::class, 'enviarEmail'])->name('enviar-selecionados');
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
-
     Route::middleware(['auth', 'verified', RoleMiddleware::class . ':admin'])->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
         Route::post('/users/create', [UserController::class, 'store'])->name('users.store');
         Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');
     });
-
-
 
     Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
