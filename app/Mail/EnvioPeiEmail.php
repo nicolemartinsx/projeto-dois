@@ -46,19 +46,4 @@ class EnvioPeiEmail extends Mailable
             view: 'emails.email',
         );
     }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        // Recupera o caminho do arquivo a partir do modelo File
-        $filePath = storage_path('app/private/' . $this->pdf->file_path); // Adapte o caminho conforme necessário
-
-        return [
-            \Illuminate\Mail\Mailables\Attachment::fromPath($filePath)->as($this->pdf->original_name), // Envia o arquivo com o nome original
-        ];
-    }
 }
