@@ -21,7 +21,10 @@
                             <td class="p-4">{{ $professor->name }}</td>
                             <td class="p-4">{{ $professor->email }}</td>
                             <td class="p-4 text-center">
-                                <x-secondary-button>{{ __('Ver PEIs') }}</x-secondary-button>
+                                <form action="{{ route('pdfs.professor', $professor->id) }}" method="GET">
+                                    @csrf
+                                    <x-secondary-button type="submit">{{ __('Ver PEIs') }}</x-secondary-button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach

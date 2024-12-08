@@ -26,14 +26,9 @@ Route::middleware(['web'])->group(function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-        //rotas de tabela com todos os pdfs
-
         Route::get('/tabela', [PdfController::class, 'tabela'])->name('pdfs.tabela');
-
-
-        
-        // rotas de adicionar pdfs
         Route::get('/pdfs', [PdfController::class, 'index'])->name('pdfs.index');
+        Route::get('/pdfs/professor/{id}', [PdfController::class, 'tabelaProfessor'])->name('pdfs.professor');
         Route::post('/pdf/upload', [PdfController::class, 'uploadPDF'])->name('pdf.upload');
         Route::get('/pdfs/{id}', [PdfController::class, 'show'])->name('pdfs.show');
         Route::get('/pdfs/download/{id}', [PdfController::class, 'download'])->name('pdfs.download');

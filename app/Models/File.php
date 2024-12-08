@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class File extends Model
 {
@@ -27,5 +28,10 @@ class File extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function professors(): BelongsToMany
+    {
+        return $this->belongsToMany(Professor::class)->withPivot(['visualizado', 'confirmado']);
     }
 }

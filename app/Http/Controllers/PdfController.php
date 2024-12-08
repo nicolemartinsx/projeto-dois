@@ -13,12 +13,15 @@ use Illuminate\Support\Facades\Auth;
 
 class PdfController extends Controller
 {
-
-    //tabela com todos os peis adicionados
     public function tabela()
     {
-        $pdfs = File::all(); 
-        return view('pdf.tabela', compact('pdfs')); 
+        if (Auth::user()->google_id) {
+            $professor = Professor::where('email', Auth::user()->email)->first();
+            $pdfs = $professor->files()->get();
+        } else {
+            $pdfs = File::all();
+        }
+        return view('pdf.tabela', compact('pdfs'));
     }
 
     public function compartilhar($id)
@@ -26,6 +29,17 @@ class PdfController extends Controller
         $pdf = File::findOrFail($id);
         $professors = Professor::orderBy('name')->get();
         return view('pdf.selecao', compact('pdf', 'professors'));
+    }
+
+    public function tabelaProfessor($id)
+    {
+        $professor = Professor::findOrFail($id);
+        $pdfs = $professor->files()->get();
+        foreach ($pdfs as $pdf) {
+            $pdf->visualizado = $pdf->pivot->visualizado;
+            $pdf->confirmado = $pdf->pivot->confirmado;
+        }
+        return view('pdf.professor', compact('pdfs', 'professor'));
     }
 
     public function enviarEmail(Request $request)
@@ -38,12 +52,12 @@ class PdfController extends Controller
         }
 
         $professores = Professor::whereIn('id', $professoresSelecionados)->get();
-        $emails = $professores->pluck('email')->toArray();
         $pdf = File::findOrFail($pdfId);
 
         foreach ($professores as $professor) {
             $dados = ['nome' => $professor->name, 'pdf' => $pdf];
             Mail::to($professor->email)->send(new EnvioPeiEmail($dados));
+            $professor->files()->save($pdf);
         }
 
         return redirect()->route('pdfs.tabela')->with('success', 'Email enviado com sucesso!');
@@ -51,14 +65,14 @@ class PdfController extends Controller
 
     public function index()
     {
-    if (!Auth::check()) {
-        return redirect()->route('login'); // Redireciona para a página de login se não estiver autenticado
-    }
-    
-    $userId = Auth::user()->id;
-    $pdfs = File::where('user_id', $userId)->get();
+        if (!Auth::check()) {
+            return redirect()->route('login'); // Redireciona para a página de login se não estiver autenticado
+        }
 
-    return view('pdf.pei', compact('pdfs'));
+        $userId = Auth::user()->id;
+        $pdfs = File::where('user_id', $userId)->get();
+
+        return view('pdf.pei', compact('pdfs'));
     }
 
     public function uploadPDF(Request $request)
@@ -70,40 +84,42 @@ class PdfController extends Controller
         $path = $request->file('pdf')->store("pdfs/{$userId}");
 
         $pdf = new File();
-        $pdf->file_path = $path; 
-        $pdf->user_id = $userId; 
+        $pdf->file_path = $path;
+        $pdf->user_id = $userId;
         $pdf->original_name = $request->file('pdf')->getClientOriginalName();
-        $pdf->nome_aluno = $request->input('nome_aluno'); 
+        $pdf->nome_aluno = $request->input('nome_aluno');
         $pdf->save();
 
         return redirect()->back()->with('success', 'PDF enviado com sucesso!');
     }
 
     public function show($id)
-        {
-    $file = File::findOrFail($id); 
-        $file->visualizado = true;
-        $file->save();
+    {
+        $file = File::findOrFail($id);
 
-    $filePath = $file->file_path; 
+        $professor = Professor::where('email', Auth::user()->email)->first();
+        $file->professors()->updateExistingPivot($professor->id, [
+            'visualizado' => true,
+        ]);
 
-    if (Storage::exists($filePath)) {
-        return response()->file(Storage::path($filePath)); 
-    } else {
-        return response()->json(['message' => 'Arquivo não encontrado'], 404);
-    }
+        $filePath = $file->file_path;
+        if (Storage::exists($filePath)) {
+            return response()->file(Storage::path($filePath));
+        } else {
+            return response()->json(['message' => 'Arquivo não encontrado'], 404);
+        }
     }
 
     public function download($id)
-        {
-            $file = File::findOrFail($id); 
-            $filePath = $file->file_path; 
-         
-            if (Storage::exists($filePath)) {
-                return Storage::download($filePath); 
-            } else {
-                return response()->json(['message' => 'Arquivo não encontrado'], 404);
-    }
+    {
+        $file = File::findOrFail($id);
+        $filePath = $file->file_path;
+
+        if (Storage::exists($filePath)) {
+            return Storage::download($filePath);
+        } else {
+            return response()->json(['message' => 'Arquivo não encontrado'], 404);
+        }
     }
 
     public function deletar($id)
