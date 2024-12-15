@@ -12,9 +12,16 @@
                     <div class="p-6">
                         <form action="{{ route('pdf.upload') }}" method="POST" enctype="multipart/form-data">
                             @csrf
-                            <div class="mb-4">
-                                <label for="nome_aluno" class="block text-sm font-medium text-gray-700">RA:</label>
-                                <input type="text" name="nome_aluno" id="nome_aluno" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50" required>
+                            <div class="mb-4 flex space-x-4">
+                                <div class="flex-1">
+                                    <label for="nome_aluno" class="block text-sm font-medium text-gray-700">Nome:</label>
+                                    <input type="text" name="nome_aluno" id="nome_aluno" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50" required>
+                                </div>
+                            
+                                <div class="w-1/4">
+                                    <label for="ra" class="block text-sm font-medium text-gray-700">RA:</label>
+                                    <input type="text" name="registro_academico" id="ra" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50" required>
+                                </div>
                             </div>
                             <div class="mb-4">
                                 <label for="pdf" class="block text-sm font-medium text-gray-700">Selecione um arquivo PDF:</label>

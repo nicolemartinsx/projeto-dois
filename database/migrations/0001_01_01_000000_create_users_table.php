@@ -45,6 +45,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Referência ao usuário que salvou o arquivo
             $table->string('original_name'); // Nome original do arquivo
             $table->timestamps(); // Para armazenar as datas de criação e atualização
+            $table->integer('registro_academico');
         });
 
         Schema::create('professors', function (Blueprint $table) {

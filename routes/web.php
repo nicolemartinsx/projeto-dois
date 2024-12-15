@@ -37,6 +37,15 @@ Route::middleware(['web'])->group(function () {
         Route::get('/pdfs/{id}/selecao', [PdfController::class, 'compartilhar'])->name('pdfs.selecao');
 
         Route::get('/professors', [ProfessorController::class, 'index'])->name('professors');
+
+
+
+        //rotas de confirmação pei
+        Route::get('/pei/{dados}', [pdfController::class, 'confirmacaoPei'])->name('pei.confirmacao-pei');
+        Route::get('/getpei/{dados}', [pdfController::class, 'getPei'])->name('pei.getpei');
+        
+        Route::post('/confirmar-leitura/{file}', [pdfController::class, 'confirmarLeitura'])->name('confirmar-leitura');
+
     });
 });
 

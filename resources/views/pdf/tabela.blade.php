@@ -27,7 +27,7 @@
                         @foreach ($pdfs as $pdf)
                         <tr class="odd:bg-blue-50">
                             <td class="p-4">{{ $pdf->original_name }}</td>
-                            <td class="p-4 text-center"> {{ $pdf->nome_aluno }}</td>
+                            <td class="p-4 text-center"> {{ $pdf->registro_academico }}</td>
                             <td class="p-4 text-center">
                                 @if (Auth::user()->google_id == null)
                                 <form action="{{ route('pdfs.selecao', $pdf->id) }}" method="GET">
@@ -35,7 +35,7 @@
                                     <x-secondary-button type="submit">{{ __('Compartilhar') }}</x-secondary-button>
                                 </form>
                                 @else
-                                <form action="{{ route('pdfs.show', $pdf->id) }}" method="GET">
+                                <form action="{{ url('pei/'.$pdf->nome_aluno.'-'.$pdf->registro_academico) }}" method="GET">
                                     @csrf
                                     <x-secondary-button type="submit">{{ __('Visualizar') }}</x-secondary-button>
                                 </form>
