@@ -151,15 +151,47 @@ class PdfController extends Controller
         list($nome, $numero) = explode('-', $dados);
 
         $file = File::where('registro_academico', $numero)->first();// eu tenho um arquivo aqui, pq eu preciso o getPei ali embaixo? eu tbm não sei
+       
+    /**  
         if(!Auth::user()->role=='admin'){
-            $professor = Professor::where('email', Auth::user()->email)->first(); 
+           
             $file->professors()->updateExistingPivot($professor->id, [
                 'visualizado' => true,
             ]);
         }
-       
+    */
+
+        $professor = Professor::where('email', Auth::user()->email)->first();
+
+        $pivotRecord = $file->professors()->where('professor_id', $professor->id)->first()->pivot;
         
-        return view('pdf.confirmarPei', compact( 'file','nome', 'numero'));
+  
+
+
+
+        /*
+        Esse IF aqui é para definir se o url vai ser para apenas o pdf ou a confirmação
+        */
+
+        if ($pivotRecord->confirmado) {// era para caso o pei ja tenha sido lido e confirmado apenas mostrar o pdf não levar para a confirmação denovo 
+            echo "O professor já foi visualizado.";
+            $id_arquivo = $pivotRecord->file_id;
+           
+            //return view('pdfs.show', compact( $id_arquivo));
+
+            return redirect('pdfs/'.$id_arquivo.'')->with('success', 'Confirmação recebida com sucesso!');
+
+            
+        } else {
+
+            return view('pdf.confirmarPei', compact( 'file','nome', 'numero'));
+     
+        }
+
+       
+
+        
+        
 
     }
 
