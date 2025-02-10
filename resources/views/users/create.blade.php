@@ -25,7 +25,7 @@
                         <x-text-input
                             id="password"
                             class="block mt-1 w-full bg-gray-50"
-                            name="password" readonly value="102938" />
+                            name="password" readonly value="123456" />
                     </div>
                     <div class="flex items-center justify-between mt-4">
                         <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md" href="{{ route('users') }}">

@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\File;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response;
+
 class PdfController extends Controller
 {
     public function tabela()
@@ -88,7 +88,7 @@ class PdfController extends Controller
         $pdf->user_id = $userId;
         $pdf->original_name = $request->file('pdf')->getClientOriginalName();
         $pdf->nome_aluno = $request->input('nome_aluno');
-        $pdf->registro_academico = $request ->input ('registro_academico');
+        $pdf->registro_academico = $request->input('registro_academico');
         $pdf->save();
 
         return redirect()->back()->with('success', 'PDF enviado com sucesso!');
@@ -97,12 +97,6 @@ class PdfController extends Controller
     public function show($id)
     {
         $file = File::findOrFail($id);
-
-        $professor = Professor::where('email', Auth::user()->email)->first();
-        $file->professors()->updateExistingPivot($professor->id, [
-            'visualizado' => true
-        ]);
-
         $filePath = $file->file_path;
         if (Storage::exists($filePath)) {
             return response()->file(Storage::path($filePath));
@@ -150,49 +144,32 @@ class PdfController extends Controller
 
         list($nome, $numero) = explode('-', $dados);
 
-        $file = File::where('registro_academico', $numero)->first();// eu tenho um arquivo aqui, pq eu preciso o getPei ali embaixo? eu tbm não sei
-       
-    /**  
-        if(!Auth::user()->role=='admin'){
-           
-            $file->professors()->updateExistingPivot($professor->id, [
-                'visualizado' => true,
-            ]);
-        }
-    */
+        $file = File::where('registro_academico', $numero)->first(); // eu tenho um arquivo aqui, pq eu preciso o getPei ali embaixo? eu tbm não sei
+
 
         $professor = Professor::where('email', Auth::user()->email)->first();
 
+        $file->professors()->updateExistingPivot($professor->id, [
+            'visualizado' => true,
+        ]);
+
         $pivotRecord = $file->professors()->where('professor_id', $professor->id)->first()->pivot;
-        
-  
-
-
 
         /*
         Esse IF aqui é para definir se o url vai ser para apenas o pdf ou a confirmação
         */
 
-        if ($pivotRecord->confirmado) {// era para caso o pei ja tenha sido lido e confirmado apenas mostrar o pdf não levar para a confirmação denovo 
+        if ($pivotRecord->confirmado) { // era para caso o pei ja tenha sido lido e confirmado apenas mostrar o pdf não levar para a confirmação denovo 
             echo "O professor já foi visualizado.";
             $id_arquivo = $pivotRecord->file_id;
-           
+
             //return view('pdfs.show', compact( $id_arquivo));
 
-            return redirect('pdfs/'.$id_arquivo.'')->with('success', 'Confirmação recebida com sucesso!');
-
-            
+            return redirect('pdfs/' . $id_arquivo . '')->with('success', 'Confirmação recebida com sucesso!');
         } else {
 
-            return view('pdf.confirmarPei', compact( 'file','nome', 'numero'));
-     
+            return view('pdf.confirmarPei', compact('file', 'nome', 'numero'));
         }
-
-       
-
-        
-        
-
     }
 
     /*
@@ -200,37 +177,37 @@ class PdfController extends Controller
     porem me pareceu mais facil fazer uma rota especifica para conseguir o pdf do PEI. 
 
     */
-    public function getPei($dados){ // Eu posso reutilizar essa função varias vezes 
+    public function getPei($dados)
+    { // Eu posso reutilizar essa função varias vezes 
         list($nome, $numero) = explode('-', $dados);
         $pdf = File::where('registro_academico', $numero)->first();
         if (!$pdf || !Storage::exists($pdf->file_path)) {
             return response()->json(['message' => 'PDF não encontrado.'], 404);
         }   // Até aqui mostrar pdfs usando o novo url está funcionando 
-        
-       if (Storage::exists($pdf->file_path)) {
+
+        if (Storage::exists($pdf->file_path)) {
             return response()->file(Storage::path($pdf->file_path));
         } else {
             return response()->json(['message' => 'Arquivo não encontrado'], 404);
         }
-
     }
 
-    public function confirmarLeitura(Request $request,$fileId)// tem um problema no confirmar leitura e provavelmente é relacionado ao ID do arquivo
+    public function confirmarLeitura(Request $request, $fileId) // tem um problema no confirmar leitura e provavelmente é relacionado ao ID do arquivo
     {
 
-      
 
 
-      
 
 
-      //  $request->validate([
-      //        'email_recebido' => 'required|boolean',
-      //      'leitura_confirmada' => 'required|boolean',
-      //  ]); //por algum motivo não consigo fazer validate 
-        
-       
-        
+
+
+        //  $request->validate([
+        //        'email_recebido' => 'required|boolean',
+        //      'leitura_confirmada' => 'required|boolean',
+        //  ]); //por algum motivo não consigo fazer validate 
+
+
+
 
         $file = File::findOrFail($fileId);
         $professor = Professor::where('email', Auth::user()->email)->first();
@@ -240,11 +217,10 @@ class PdfController extends Controller
             'confirmado' => true
         ]);
 
-      
+
         if (!$professor) {
             return redirect()->back()->with('error', 'Professor não encontrado.');
         }
         return redirect('/tabela')->with('success', 'Confirmação recebida com sucesso!');
     }
-
 }
